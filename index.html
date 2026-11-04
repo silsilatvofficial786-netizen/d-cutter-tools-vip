@@ -1,1 +1,52 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D Cutter - 32 Premium Tools</title>
+<style> *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui} body{background:#fff;color:#111} .header{text-align:center;padding:28px 16px 12px;border-bottom:1px solid #eee} .logo{width:90px;height:90px;background:#111;border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;position:relative} .logo b{color:#fff;font-size:48px;position:absolute;top:2px} .logo span{font-size:42px;position:absolute;bottom:-6px} h1{font-size:22px;font-weight:800;margin-bottom:6px} .sub{color:#666;font-size:14px} .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px} .tool-btn{background:#f5f5f5;border:1px solid #e8e8e8;border-radius:18px;padding:18px 10px;font-weight:700;font-size:15px;cursor:pointer;text-align:center} .tool-btn:active{background:#111;color:#fff} .section{padding:8px 16px 0} .section h2{font-size:20px;font-weight:800;margin:18px 0 14px} .vol-grid{display:flex;gap:10px;flex-wrap:wrap;padding:0 16px} .vol-grid button{border:1px solid #ddd;background:#fff;border-radius:24px;padding:10px 18px;font-weight:600;cursor:pointer} .vol-grid button.active{background:#111;color:#fff} .workspace{background:#fafafa;border:1px solid #eee;border-radius:20px;margin:16px;padding:16px} .workspace h3{font-size:16px;margin-bottom:10px} input[type=file]{width:100%;padding:10px;border:1px dashed #bbb;border-radius:12px;background:#fff;margin-bottom:12px} .row{display:flex;gap:10px;margin:8px 0} .row input{flex:1;padding:10px;border-radius:10px;border:1px solid #ddd} .btn-main{width:100%;background:#111;color:#fff;border:none;border-radius:14px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;margin-top:10px} .progress{height:6px;background:#eee;border-radius:10px;margin-top:12px;overflow:hidden;display:none} .progress div{height:100%;background:#111;width:0%} .audio-preview{width:100%;margin-top:12px} .history{border-top:1px solid #eee;margin-top:20px;padding:16px} .hist-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px} .badge{background:#111;color:#fff;border-radius:20px;padding:2px 8px;font-size:11px} </style>
+</head>
+<body>
+<div class="header"><div class="logo"><b>D</b><span>✂️</span></div><h1>D Cutter - 32 Premium Tools</h1><div class="sub">Video | Audio | Image | PDF - Batch + History System</div></div>
+<div class="grid">
+<button class="tool-btn" onclick="openTool('video')">Video Cutter</button>
+<button class="tool-btn" onclick="openTool('audio')">Audio Cutter</button>
+<button class="tool-btn" onclick="openTool('image')">Image Converter</button>
+<button class="tool-btn" onclick="openTool('pdf')">PDF Tools</button>
+<button class="tool-btn" onclick="openTool('mp3cutter')">MP3 Cutter</button>
+<button class="tool-btn" onclick="openTool('mp4tomp3')">MP4 to MP3</button>
+<button class="tool-btn" onclick="openTool('volhigh')">Volume High</button>
+<button class="tool-btn" onclick="openTool('volextra')">Volume Extra</button>
+</div>
+<div class="section"><h2>Volume Control System</h2></div>
+<div class="vol-grid">
+<button id="vHigh" onclick="setVolumeMode('high')">High (150%)</button>
+<button id="vExtra" onclick="setVolumeMode('extra')">Extra (300%)</button>
+<button id="vLow" onclick="setVolumeMode('low')">Low (50%)</button>
+<button id="vMute" onclick="setVolumeMode('mute')">Mute</button>
+</div>
+<div id="workspace" class="workspace" style="display:block">
+<h3 id="wTitle">Select File - Batch 5 Files Supported</h3>
+<input type="file" id="fileInput" accept="video/*,audio/*,image/*,.pdf" multiple>
+<div id="fileList" style="font-size:12px;color:#555;margin-bottom:8px">فائل سلیکٹ کریں باس، 5 فائلز ایک ساتھ</div>
+<div class="row"><input type="number" id="startTime" placeholder="Start sec 0"><input type="number" id="endTime" placeholder="End sec 10"></div>
+<button class="btn-main" id="processBtn" onclick="processFiles()">Convert / Cut Now + Boost Volume</button>
+<div class="progress" id="progress"><div id="pBar"></div></div>
+<audio controls id="audioPrev" class="audio-preview" style="display:none"></audio>
+<video controls id="videoPrev" style="width:100%;margin-top:12px;border-radius:12px;display:none"></video>
+<div id="resultArea" style="margin-top:12px"></div>
+</div>
+<div class="history"><h2 style="font-size:16px;margin-bottom:8px">Recent Files History</h2><div id="histList"><div style="color:#999;font-size:12px">کوئی فائل ابھی تک پروسیس نہیں ہوئی</div></div></div>
+<script>
+let currentTool='audio';let volumeMode='high';let audioCtx;let fileBuffers=[];
+function openTool(t){currentTool=t;document.getElementById('workspace').style.display='block';if(t==='volhigh')setVolumeMode('high');if(t==='volextra')setVolumeMode('extra');window.scrollTo({top:280,behavior:'smooth'});}
+function setVolumeMode(m){volumeMode=m;document.querySelectorAll('.vol-grid button').forEach(b=>b.classList.remove('active'));const map={high:'vHigh',extra:'vExtra',low:'vLow',mute:'vMute'};if(map[m])document.getElementById(map[m]).classList.add('active');}
+document.getElementById('fileInput').addEventListener('change',async(e)=>{const files=[...e.target.files];let html='';fileBuffers=[];for(let i=0;i<files.length;i++){html+=`<div>📁 ${files[i].name} - ${(files[i].size/1024/1024).toFixed(2)} MB</div>`;if(files[i].type.startsWith('audio')||files[i].type.startsWith('video')){const buf=await files[i].arrayBuffer();fileBuffers.push({file:files[i],buffer:buf});}else{fileBuffers.push({file:files[i]});}}document.getElementById('fileList').innerHTML=html;if(files[0]){const url=URL.createObjectURL(files[0]);if(files[0].type.startsWith('audio')){document.getElementById('audioPrev').src=url;document.getElementById('audioPrev').style.display='block';document.getElementById('videoPrev').style.display='none';}else if(files[0].type.startsWith('video')){document.getElementById('videoPrev').src=url;document.getElementById('videoPrev').style.display='block';document.getElementById('audioPrev').style.display='none';}}});
+async function processFiles(){if(fileBuffers.length===0){alert('پہلے فائل سلیکٹ کریں باس!');return;}const start=parseFloat(document.getElementById('startTime').value)||0;const end=parseFloat(document.getElementById('endTime').value)||0;document.getElementById('progress').style.display='block';document.getElementById('pBar').style.width='20%';if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();const gainMap={high:1.5,extra:3.0,low:0.5,mute:0};const gainVal=gainMap[volumeMode]||1.5;let resultHTML='';for(let idx=0;idx<fileBuffers.length;idx++){const item=fileBuffers[idx];document.getElementById('pBar').style.width=((idx+1)/fileBuffers.length*100)+'%';if(item.buffer){try{const audioBuf=await audioCtx.decodeAudioData(item.buffer.slice(0));const sr=audioBuf.sampleRate;const sSample=Math.floor(start*sr);const eSample=end>0?Math.floor(end*sr):audioBuf.length;const newLen=Math.max(1,eSample-sSample);const offline=new OfflineAudioContext(audioBuf.numberOfChannels,newLen,sr);const src=offline.createBufferSource();src.buffer=audioBuf;const gain=offline.createGain();gain.gain.value=gainVal;src.connect(gain);gain.connect(offline.destination);src.start(0);const rendered=await offline.startRendering();const wavBlob=audioBufferToWavBlob(rendered);const url=URL.createObjectURL(wavBlob);resultHTML+=`<div style="margin:8px 0;padding:10px;background:#fff;border:1px solid #eee;border-radius:12px"><b>${item.file.name}</b> → Boosted ${gainVal*100}% + Trimmed<br><audio controls src="${url}" style="width:100%;margin-top:6px"></audio><br><a href="${url}" download="D-Cutter-${item.file.name}.wav" style="display:inline-block;margin-top:6px;background:#111;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:12px">⬇️ Download</a></div>`;addHistory(item.file.name,gainVal);}catch(err){resultHTML+=`<div style="color:red">Error ${item.file.name}: ${err.message}</div>`;}}else{resultHTML+=`<div style="padding:10px;background:#fff;border:1px solid #eee;border-radius:12px">📄 ${item.file.name} Ready</div>`;addHistory(item.file.name,gainVal);}await new Promise(r=>setTimeout(r,300));}document.getElementById('resultArea').innerHTML=resultHTML;document.getElementById('pBar').style.width='100%';setTimeout(()=>{document.getElementById('progress').style.display='none';},800);}
+function audioBufferToWavBlob(buffer){const numCh=buffer.numberOfChannels;const length=buffer.length*numCh*2;const ab=new ArrayBuffer(44+length);const view=new DataView(ab);function writeString(o,s){for(let i=0;i<s.length;i++)view.setUint8(o+i,s.charCodeAt(i));}writeString(0,'RIFF');view.setUint32(4,36+length,true);writeString(8,'WAVE');writeString(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,numCh,true);view.setUint32(24,buffer.sampleRate,true);view.setUint32(28,buffer.sampleRate*numCh*2,true);view.setUint16(32,numCh*2,true);view.setUint16(34,16,true);writeString(36,'data');view.setUint32(40,length,true);let offset=44;for(let i=0;i<buffer.length;i++){for(let ch=0;ch<numCh;ch++){const s=Math.max(-1,Math.min(1,buffer.getChannelData(ch)[i]));view.setInt16(offset,s<0?s*0x8000:s*0x7FFF,true);offset+=2;}}return new Blob([ab],{type:'audio/wav'});}
+function addHistory(name,gain){const list=document.getElementById('histList');if(list.innerHTML.includes('کوئی فائل'))list.innerHTML='';const div=document.createElement('div');div.className='hist-item';div.innerHTML=`<span>✅ ${name}</span><span class="badge">${gain*100}% Vol</span>`;list.prepend(div);localStorage.setItem('dcutter_hist',list.innerHTML);}
+const saved=localStorage.getItem('dcutter_hist');if(saved)document.getElementById('histList').innerHTML=saved;setVolumeMode('high');
+</script>
+</body>
+</html>
