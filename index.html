@@ -1,1 +1,148 @@
 
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D CUT VIP - Sada Wala</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#000;color:#fff}
+.page{display:none}.page.active{display:block}
+.top{padding:16px;display:flex;justify-content:space-between;align-items:center;background:#000}
+.logo{width:44px;height:44px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#000;font-size:28px;font-weight:900}
+.new{margin:16px;background:#fff;color:#000;border-radius:14px;padding:18px;text-align:center;cursor:pointer}
+.new b{font-size:22px}
+.card{margin:0 16px 10px;background:#1a1a1a;border-radius:12px;padding:12px}
+video{width:100%;height:40vh;background:#000;object-fit:contain;display:block}
+.bar{display:flex;gap:8px;overflow-x:auto;padding:12px;background:#111}
+.bar button{flex:0 0 auto;background:#222;color:#fff;border:none;padding:12px 16px;border-radius:20px}
+.bar button.on{background:#fff;color:#000;font-weight:800}
+.sheet{background:#111;margin:12px;border-radius:14px;padding:14px;min-height:260px}
+.frow{display:flex;gap:10px;overflow-x:auto;padding:12px 0}
+.fitem{flex:0 0 70px;text-align:center;cursor:pointer}
+.fbox{width:70px;height:85px;background:#333;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid transparent}
+.fitem.sel .fbox{border-color:#fff}
+.srow{display:flex;gap:10px;flex-wrap:wrap;padding:10px 0}
+.sitem{width:65px;height:65px;background:#222;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer}
+.sitem.sel{border:2px solid #fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.row button{background:#222;color:#fff;border:none;padding:11px 14px;border-radius:10px}
+.action{display:flex;gap:10px;margin-top:16px}
+.action button{flex:1;padding:13px;border:none;border-radius:12px;font-weight:900}
+.ok{background:#fff;color:#000}.no{background:#333;color:#fff}
+input{width:100%;padding:12px;border-radius:10px;border:none;background:#222;color:#fff;margin-top:8px}
+input[type=range]{padding:0}
+#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 16px;border-radius:20px;font-weight:800;display:none;z-index:99}
+#overlayText{position:absolute;bottom:50px;left:0;right:0;text-align:center;font-size:26px;font-weight:900;color:yellow;text-shadow:2px 2px 4px #000;pointer-events:none}
+#stickerLayer{position:absolute;top:20px;left:0;right:0;text-align:center;font-size:40px;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="msg"></div>
+
+<div id="home" class="page active">
+  <div class="top"><div style="display:flex;gap:10px;align-items:center"><div class="logo">D</div><b>D CUT VIP</b></div><div>⚙️</div></div>
+  <div class="new" onclick="document.getElementById('vi').click()"><b>+ ویڈیو بنائیں</b><br><small>ویڈیو چن کر ایڈیٹنگ شروع کریں</small></div>
+  <input type="file" id="vi" accept="video/*" hidden onchange="loadVideo(event)">
+  <div style="padding:12px 16px">میرے پروجیکٹ</div>
+  <div id="plist"><div class="card">ابھی کوئی پروجیکٹ نہیں ہے۔ اوپر سے ویڈیو بنائیں دبائیں۔</div></div>
+</div>
+
+<div id="editor" class="page">
+  <div class="top"><button onclick="showPage('home')" style="background:#222;color:#fff;border:none;padding:8px 14px;border-radius:8px">‹ واپس</button><b>D CUT VIP</b><button onclick="openPanel('export',null)" style="background:#fff;color:#000;border:none;padding:8px 14px;border-radius:8px;font-weight:800">ایکسپورٹ</button></div>
+  <div style="position:relative"><video id="myVideo" controls playsinline></video><div id="stickerLayer"></div><div id="overlayText"></div></div>
+
+  <div class="bar">
+    <button onclick="openPanel('cut',this)">کاٹیں</button>
+    <button onclick="openPanel('text',this)">لکھیں</button>
+    <button onclick="openPanel('audio',this)">آواز</button>
+    <button onclick="openPanel('sticker',this)">اسٹیکر</button>
+    <button onclick="openPanel('filter',this)">فلٹر</button>
+    <button onclick="openPanel('speed',this)">رفتار</button>
+    <button onclick="openPanel('export',this)">ایکسپورٹ</button>
+  </div>
+
+  <div id="panel-cut" class="sheet" style="display:none">
+    <h3>کاٹیں</h3><p style="color:#aaa;font-size:12px">ویڈیو کو کاٹیں، گھمائیں۔</p>
+    <div class="row"><button onclick="splitVideo()">اسپلٹ</button><button onclick="rotateVideo()">گھمائیں</button><button onclick="togglePlay()">پلے / روکیں</button></div>
+    <div class="action"><button class="ok" onclick="showMsg('کاٹنا پکا ہو گیا')">OK</button><button class="no" onclick="resetEdit()">ہٹائیں</button></div>
+  </div>
+
+  <div id="panel-text" class="sheet" style="display:none">
+    <h3>لکھیں</h3>
+    <input id="textInput" placeholder="یہاں لکھیں..." oninput="document.getElementById('overlayText').innerText=this.value">
+    <div class="row"><button onclick="setColor('yellow')">پیلا</button><button onclick="setColor('white')">سفید</button><button onclick="setColor('#00ffcc')">سبز</button><button onclick="changeSize(1)">بڑا +</button><button onclick="changeSize(-1)">چھوٹا -</button></div>
+    <div class="action"><button class="ok" onclick="showMsg('لکھائی پکی')">OK</button><button class="no" onclick="document.getElementById('overlayText').innerText=''">ہٹائیں</button></div>
+  </div>
+
+  <div id="panel-audio" class="sheet" style="display:none">
+    <h3>آواز</h3>
+    <div class="row"><button onclick="showMsg('نعت لگ گئی')">نعت</button><button onclick="showMsg('بیان لگ گیا')">بیان</button><button onclick="showMsg('وائس اوور')">وائس اوور</button></div>
+    <label style="display:block;margin-top:10px">والیوم</label><input type="range" min="0" max="1" step="0.1" value="1" oninput="setVol(this.value)">
+    <div class="action"><button class="ok" onclick="muteVideo(false)">آواز آن</button><button class="no" onclick="muteVideo(true)">میوٹ</button></div>
+  </div>
+
+  <div id="panel-sticker" class="sheet" style="display:none">
+    <h3>اسٹیکر</h3>
+    <div class="srow" id="sRow"></div>
+    <div class="action"><button class="ok" onclick="showMsg('اسٹیکر پکا')">OK</button><button class="no" onclick="document.getElementById('stickerLayer').innerText=''">ہٹائیں</button></div>
+  </div>
+
+  <div id="panel-filter" class="sheet" style="display:none">
+    <h3>فلٹر</h3><p style="color:#aaa;font-size:12px">جس پر دبائیں گے، وہی اوپر لگ جائے گا۔</p>
+    <div class="frow" id="fRow"></div>
+    <div style="background:#222;padding:10px;border-radius:10px;text-align:center">دیکھ رہے ہیں: <b id="pn">اصلی</b> | پکا: <b id="an">اصلی</b></div>
+    <div class="action"><button class="ok" onclick="applyFilter()">OK - لگا دیں</button><button class="no" onclick="removeFilter()">ہٹائیں</button></div>
+  </div>
+
+  <div id="panel-speed" class="sheet" style="display:none">
+    <h3>رفتار</h3>
+    <input type="range" min="0.5" max="2" step="0.1" value="1" oninput="changeSpeed(this.value)"><small id="sp">رفتار: 1x</small>
+    <div class="row"><button onclick="changeSpeed(0.5)">آہستہ</button><button onclick="changeSpeed(1)">نارمل</button><button onclick="changeSpeed(2)">تیز</button></div>
+    <div class="action"><button class="ok" onclick="showMsg('رفتار پکی')">OK</button><button class="no" onclick="changeSpeed(1)">واپس</button></div>
+  </div>
+
+  <div id="panel-export" class="sheet" style="display:none">
+    <h3>ایکسپورٹ</h3>
+    <div class="row"><button onclick="setRes('480p')">480p</button><button onclick="setRes('720p')">720p</button><button onclick="setRes('1080p')">1080p</button></div>
+    <p style="margin-top:10px">کوالٹی: <b id="res">720p</b></p>
+    <div class="action"><button class="ok" onclick="exportVideo()">ایکسپورٹ کریں</button></div>
+    <a id="dl" style="display:none"></a>
+  </div>
+</div>
+
+<script>
+let video=document.getElementById('myVideo'), rot=0, start=0, end=0, txtSize=26, applied='none', appliedName='اصلی', prev='none', prevName='اصلی', res='720p';
+let filters=[
+ {name:'اصلی',css:'none'},{name:'کالا سفید',css:'grayscale(1)'},{name:'سنہری',css:'sepia(0.8)'},{name:'چمکدار',css:'contrast(1.4) saturate(1.5)'},{name:'ٹھنڈا',css:'hue-rotate(180deg)'},{name:'گرم',css:'sepia(0.4) saturate(1.6)'},{name:'روشن',css:'brightness(1.3)'},{name:'مووی',css:'contrast(1.2) saturate(0.8)'}
+];
+let fr=document.getElementById('fRow');
+filters.forEach(f=>{
+ let d=document.createElement('div'); d.className='fitem'; d.innerHTML=`<div class="fbox">${f.name}</div>`;
+ d.onclick=()=>{document.querySelectorAll('.fitem').forEach(x=>x.classList.remove('sel')); d.classList.add('sel'); prev=f.css; prevName=f.name; video.style.filter=f.css; document.getElementById('pn').innerText=f.name; showMsg(f.name+' دیکھ رہے ہیں');};
+ fr.appendChild(d);
+});
+function applyFilter(){applied=prev; appliedName=prevName; document.getElementById('an').innerText=appliedName+' پکا'; showMsg(appliedName+' پکا ہو گیا');}
+function removeFilter(){applied='none';appliedName='اصلی';prev='none';prevName='اصلی';video.style.filter='none';document.getElementById('pn').innerText='اصلی';document.getElementById('an').innerText='اصلی';showMsg('فلٹر ہٹا دیا');}
+let stickers=['❤️','🔥','👍','⭐','💯','🔔','SUBSCRIBE','FOLLOW','LIKE'];
+let sr=document.getElementById('sRow');
+stickers.forEach(s=>{let d=document.createElement('div');d.className='sitem';d.innerText=s;d.style.fontSize=s.length>3?'11px':'24px';d.onclick=()=>{document.querySelectorAll('.sitem').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');document.getElementById('stickerLayer').innerText=s;};sr.appendChild(d);});
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function showMsg(m){let s=document.getElementById('msg');s.innerText=m;s.style.display='block';setTimeout(()=>s.style.display='none',2000);}
+function openPanel(n,btn){document.querySelectorAll('.bar button').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');['cut','text','audio','sticker','filter','speed','export'].forEach(x=>{document.getElementById('panel-'+x).style.display=(x===n?'block':'none');});}
+function loadVideo(e){let f=e.target.files[0];if(!f)return;video.src=URL.createObjectURL(f);showPage('editor');video.onloadedmetadata=()=>{end=video.duration;};video.play();document.getElementById('plist').innerHTML=`<div class="card">${f.name} - نیا پروجیکٹ</div>`;showMsg('ویڈیو کھل گئی');}
+function togglePlay(){video.paused?video.play():video.pause();}
+function changeSpeed(v){video.playbackRate=parseFloat(v);document.getElementById('sp').innerText='رفتار: '+v+'x';}
+function muteVideo(m){video.muted=m;showMsg(m?'میوٹ':'آواز آن');}
+function setVol(v){video.volume=v;video.muted=(v==0);}
+function rotateVideo(){rot+=90;if(rot>=360)rot=0;video.style.transform=`rotate(${rot}deg)`;}
+function resetEdit(){video.style.transform='';video.playbackRate=1;video.style.filter='none';showMsg('واپس اصلی');}
+function changeSize(d){txtSize+=d*4;document.getElementById('overlayText').style.fontSize=txtSize+'px';}
+function splitVideo(){video.pause();showMsg('اسپلٹ ہو گیا '+Math.floor(video.currentTime)+' سیکنڈ پر');}
+function setColor(c){document.getElementById('overlayText').style.color=c;}
+function setRes(r){res=r;document.getElementById('res').innerText=r;showMsg('کوالٹی: '+r);}
+function exportVideo(){if(!video.src){showMsg('پہلے ویڈیو لگائیں');return;}showMsg('ایکسپورٹ ہو رہی ہے... '+res);video.currentTime=start;video.style.filter=applied;video.play();try{let stream=video.captureStream?video.captureStream():video.mozCaptureStream();let rec=new MediaRecorder(stream,{mimeType:'video/webm'});let ch=[];rec.ondataavailable=e=>{if(e.data.size>0)ch.push(e.data);};rec.onstop=()=>{let blob=new Blob(ch,{type:'video/webm'});let url=URL.createObjectURL(blob);let a=document.getElementById('dl');a.href=url;a.download='D-CUT-'+res+'.webm';a.style.cssText='display:block;background:#fff;color:#000;padding:14px;border-radius:12px;text-align:center;font-weight:800;margin-top:12px';a.innerText='ڈاؤن لوڈ کریں - '+res;showMsg('ایکسپورٹ ہو گئی!');video.pause();};rec.start();setTimeout(()=>rec.stop(),(end-start)*1000||5000);}catch(e){let a=document.getElementById('dl');a.href=video.src;a.download='D-CUT.mp4';a.style.display='block';a.innerText='ڈاؤن لوڈ کریں';}}
+</script>
+</body>
+</html>
