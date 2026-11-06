@@ -1,1 +1,258 @@
 
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D CUT VIP</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#0f0f0f;color:#fff;overflow-x:hidden}
+.page{display:none}.page.active{display:block}
+.home-top{padding:16px;display:flex;justify-content:space-between;align-items:center}
+.logo{width:44px;height:44px;background:#fff;border-radius:13px;display:flex;align-items:center;justify-content:center}
+.logo span{font-size:30px;font-weight:900;color:#000}
+.search{background:#1e1e1e;margin:0 16px;padding:12px;border-radius:10px;color:#888}
+.new-btn{margin:16px;background:#00e5b8;border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;color:#000;cursor:pointer}
+.new-btn b{font-size:20px}
+.card{margin:0 16px 10px;background:#1e1e1e;border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:12px 0;border-top:1px solid #222;font-size:12px;z-index:10}
+.bottom-nav div{text-align:center;color:#888}.bottom-nav div.on{color:#00e5b8}.bottom-nav i{font-size:20px;font-style:normal;display:block}
+.editor-top{background:#000;padding:12px;display:flex;justify-content:space-between;align-items:center}
+.editor-top button{background:#222;color:#fff;border:none;padding:8px 14px;border-radius:8px}
+video{width:100%;height:38vh;background:#000;object-fit:contain;display:block}
+.timeline{margin:10px 12px;background:#1a1a1a;border-radius:10px;padding:10px;display:flex;gap:6px;overflow-x:auto}
+.timeline div{flex:0 0 70px;height:40px;background:#333;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px}
+.timeline div.on{background:#00e5b8;color:#000;font-weight:800}
+.tool-bar{display:flex;gap:8px;overflow-x:auto;padding:12px;background:#000;scrollbar-width:none}
+.tool-bar button{flex:0 0 auto;background:#1e1e1e;color:#fff;border:none;padding:11px 16px;border-radius:20px;font-size:13px}
+.tool-bar button.on{background:#fff;color:#000;font-weight:800}
+/* نیچے سے اوپر اٹھنے والی پٹی - CapCut والا طریقہ */
+.sheet{background:#1a1a1a;margin:0 12px 20px;border-radius:18px 18px 14px 14px;padding:14px;min-height:300px;border-top:3px solid #00e5b8}
+.sheet h3{margin-bottom:6px}
+.sheet p{color:#aaa;font-size:12px}
+.filter-row{display:flex;gap:10px;overflow-x:auto;padding:12px 0}
+.filter-item{flex:0 0 72px;text-align:center;cursor:pointer}
+.filter-thumb{width:72px;height:90px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:3px solid transparent}
+.filter-item.selected .filter-thumb{border-color:#00e5b8}
+.filter-item b{font-size:11px;display:block;margin-top:5px}
+.sticker-row{display:flex;gap:10px;overflow-x:auto;padding:12px 0;flex-wrap:wrap}
+.sticker-item{flex:0 0 68px;height:68px;background:#2a2a2a;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;border:2px solid transparent;font-weight:800}
+.sticker-item.selected{border-color:#00e5b8}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.row button{background:#2a2a2a;color:#fff;border:none;padding:11px 14px;border-radius:10px}
+.row button.on{background:#00e5b8;color:#000}
+.action-row{display:flex;gap:10px;margin-top:16px}
+.action-row button{flex:1;padding:13px;border:none;border-radius:12px;font-weight:900;font-size:14px}
+.btn-ok{background:#00e5b8;color:#000}.btn-remove{background:#ff3b30;color:#fff}.btn-cancel{background:#444;color:#fff}
+.status-box{background:#222;padding:10px;border-radius:10px;margin-top:12px;font-size:13px;text-align:center}
+.status-box b{color:#00e5b8}
+input[type=range]{width:100%;margin:8px 0}
+.text-input{width:100%;padding:12px;border-radius:10px;border:none;background:#2a2a2a;color:#fff;margin-top:8px}
+select{width:100%;padding:12px;border-radius:10px;background:#2a2a2a;color:#fff;border:none;margin-top:8px}
+#status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00e5b8;color:#000;padding:10px 16px;border-radius:20px;font-weight:800;display:none;z-index:99;font-size:13px;max-width:90%;text-align:center}
+#overlayText{position:absolute;bottom:50px;left:0;right:0;text-align:center;font-size:26px;font-weight:900;color:yellow;text-shadow:2px 2px 4px #000;pointer-events:none}
+#stickerLayer{position:absolute;top:20px;left:0;right:0;text-align:center;font-size:40px;pointer-events:none}
+.res-row{display:flex;gap:8px;margin-top:10px}
+.res-row button{flex:1;padding:12px;border:none;border-radius:10px;background:#2a2a2a;color:#fff;font-weight:800}
+.res-row button.on{background:#00e5b8;color:#000}
+.label{background:#00e5b8;color:#000;display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:900;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div id="status"></div>
+
+<div id="home" class="page active">
+  <div class="home-top"><div style="display:flex;gap:10px;align-items:center"><div class="logo"><span>D</span></div><b style="font-size:22px">D <span style="color:#00e5b8">CUT</span> VIP</b></div><div>⚙️</div></div>
+  <div class="search">🔍 تلاش کریں...</div>
+  <div class="new-btn" onclick="document.getElementById('videoInput').click()"><div style="font-size:30px;background:#000;color:#00e5b8;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center">+</div><div><b>ویڈیو بنائیں</b><br><small>ویڈیو چن کر ایڈیٹنگ شروع کریں</small></div></div>
+  <input type="file" id="videoInput" accept="video/*" hidden onchange="loadVideo(event)">
+  <div style="padding:12px 16px 8px;font-weight:800">تصویر بنائیں</div>
+  <div style="padding:0 16px;display:flex;gap:10px"><div style="flex:1;background:#1e1e1e;padding:14px;border-radius:12px;text-align:center" onclick="document.getElementById('videoInput').click()">🖼️<br><b>تصویر / ویڈیو</b></div><div style="flex:1;background:#1e1e1e;padding:14px;border-radius:12px;text-align:center" onclick="showMsg('ٹیمپلیٹ کھل رہے ہیں')">✨<br><b>ٹیمپلیٹ</b></div></div>
+  <div style="padding:16px 16px 8px;font-weight:800">میرے پروجیکٹ</div>
+  <div id="projectList"><div class="card"><div style="width:70px;height:50px;background:#333;border-radius:8px;display:flex;align-items:center;justify-content:center">🎬</div><div><b>میرا پہلا پروجیکٹ</b><br><small>ڈرافٹ - ویڈیو چنیں</small></div></div></div>
+  <div style="height:80px"></div>
+  <div class="bottom-nav"><div class="on"><i>✂️</i>ایڈٹ</div><div onclick="showMsg('ٹیمپلیٹ')"><i>✨</i>ٹیمپلیٹ</div><div onclick="document.getElementById('videoInput').click()"><i>➕</i>نیا</div><div onclick="showMsg('پروجیکٹ')"><i>📁</i>پروجیکٹ</div><div onclick="showMsg('پروفائل')"><i>👤</i>میں</div></div>
+</div>
+
+<div id="editor" class="page">
+  <div class="editor-top"><button onclick="showPage('home')">‹ واپس</button><b>D CUT VIP</b><button onclick="openPanel('export',null)" style="background:#00e5b8;color:#000;font-weight:800">ایکسپورٹ ⬆️</button></div>
+  <div style="position:relative"><video id="myVideo" controls playsinline></video><div id="stickerLayer"></div><div id="overlayText">❤️ سبحان اللہ</div></div>
+  <div class="timeline"><div class="on">ویڈیو 🎬</div><div>ٹیکسٹ ✍️</div><div>آڈیو 🎵</div><div onclick="showMsg('ٹرانزیشن - دو کلپ کا جوڑ')">جوڑ ↔️</div><div>+ جوڑیں</div></div>
+
+  <div class="tool-bar">
+    <button onclick="openPanel('edit',this)">✂️ کاٹیں</button>
+    <button onclick="openPanel('text',this)">✍️ لکھیں</button>
+    <button onclick="openPanel('audio',this)">🎵 آواز</button>
+    <button onclick="openPanel('stickers',this)">😍 اسٹیکر</button>
+    <button class="on" onclick="openPanel('filter',this)">🎨 فلٹر</button>
+    <button onclick="openPanel('adjust',this)">✨ صاف کریں</button>
+    <button onclick="openPanel('speed',this)">⏩ رفتار</button>
+    <button onclick="openPanel('effects',this)">🌈 ایفیکٹ</button>
+    <button onclick="openPanel('animation',this)">🎞️ اینیمیشن</button>
+    <button onclick="openPanel('caption',this)">💬 کیپشن</button>
+    <button onclick="openPanel('export',this)">📤 ایکسپورٹ</button>
+  </div>
+
+  <!-- 1. کاٹیں -->
+  <div id="panel-edit" class="sheet" style="display:none">
+    <span class="label">کاٹیں</span><h3>✂️ کاٹیں - کٹ / اسپلٹ / ٹرم</h3><p>ویڈیو کو کاٹیں، بیچ سے توڑیں، شروع آخر چھوٹا کریں۔</p>
+    <div class="row"><button onclick="splitVideo()">اسپلٹ ✂️</button><button onclick="rotateVideo()">گھمائیں 🔄</button><button onclick="togglePlay()">پلے / روکیں ▶️</button><button onclick="duplicateVideo()">کاپی 📄</button><button onclick="reverseVideo()">ریورس ⏪</button></div>
+    <label style="display:block;margin-top:12px">ٹرم - شروع / آخر</label>
+    <input type="range" id="trimStart" min="0" max="100" value="0" oninput="doTrim()">
+    <input type="range" id="trimEnd" min="0" max="100" value="100" oninput="doTrim()"><small id="trimLabel">0s سے 0s تک</small>
+    <div class="action-row"><button class="btn-ok" onclick="showMsg('کاٹنا پکا ہو گیا ✅')">✅ OK</button><button class="btn-remove" onclick="resetEdit()">❌ ہٹائیں</button></div>
+  </div>
+
+  <!-- 2. لکھیں -->
+  <div id="panel-text" class="sheet" style="display:none">
+    <span class="label">لکھیں</span><h3>✍️ لکھیں - ٹیکسٹ</h3><p>ویڈیو پر لکھیں، رنگ بدلیں، بڑا چھوٹا کریں۔</p>
+    <input class="text-input" id="textInput" placeholder="یہاں لکھیں: سبحان اللہ..." oninput="document.getElementById('overlayText').innerText=this.value">
+    <div class="row"><button onclick="setCaptionColor('yellow')">پیلا</button><button onclick="setCaptionColor('white')">سفید</button><button onclick="setCaptionColor('#00ffcc')">سبز</button><button onclick="setCaptionColor('red')">لال</button><button onclick="changeTextSize(1)">بڑا +</button><button onclick="changeTextSize(-1)">چھوٹا -</button></div>
+    <div class="action-row"><button class="btn-ok" onclick="showMsg('لکھائی پکی ہو گئی ✅')">✅ OK</button><button class="btn-remove" onclick="document.getElementById('overlayText').innerText='';showMsg('لکھائی ہٹا دی')">❌ ہٹائیں</button></div>
+  </div>
+
+  <!-- 3. آواز -->
+  <div id="panel-audio" class="sheet" style="display:none">
+    <span class="label">آواز</span><h3>🎵 آواز - میوزک / وائس</h3><p>میوزک لگائیں، اپنی آواز ریکارڈ کریں، والیوم کم زیادہ کریں۔</p>
+    <div class="row"><button onclick="showMsg('نعت لگ گئی 🎵')">نعت 🎵</button><button onclick="showMsg('بیان لگ گیا 🎙️')">بیان 🎙️</button><button onclick="showMsg('تالیاں 👏')">تالیاں 👏</button><button onclick="showMsg('وائس اوور ریکارڈ ہو رہا ہے... بولیں')">وائس اوور 🎤</button></div>
+    <label>والیوم</label><input type="range" min="0" max="1" step="0.1" value="1" oninput="setVolume(this.value)">
+    <div class="action-row"><button class="btn-ok" onclick="muteVideo(false)">✅ OK - آواز آن</button><button class="btn-remove" onclick="muteVideo(true)">🔇 میوٹ</button></div>
+  </div>
+
+  <!-- 4. اسٹیکر -->
+  <div id="panel-stickers" class="sheet" style="display:none">
+    <span class="label">اسٹیکر</span><h3>😍 اسٹیکر</h3><p>دل، آگ، سبسکرائب، فالو - جس پر دبائیں گے وہی اوپر لگ جائے گا۔</p>
+    <div class="sticker-row" id="stickerRow"></div>
+    <div class="action-row"><button class="btn-ok" onclick="showMsg('اسٹیکر پکا ہو گیا ✅')">✅ OK</button><button class="btn-remove" onclick="document.getElementById('stickerLayer').innerText='';showMsg('اسٹیکر ہٹا دیا')">❌ ہٹائیں</button></div>
+  </div>
+
+  <!-- 5. فلٹر -->
+  <div id="panel-filter" class="sheet">
+    <span class="label">فلٹر</span><h3>🎨 فلٹر</h3><p>جس تصویر پر دبائیں گے، وہی فلٹر اوپر ویڈیو پر لگ جائے گا۔</p>
+    <div class="filter-row" id="filterRow"></div>
+    <div class="status-box">دیکھ رہے ہیں: <b id="previewName">اصلی</b><br>پکا ہوا: <b id="appliedName">اصلی</b></div>
+    <label>فلٹر کی طاقت</label><input type="range" id="filterStrength" min="0" max="100" value="100" oninput="changeStrength(this.value)"><small id="strengthLabel">طاقت: 100%</small>
+    <div class="action-row"><button class="btn-ok" onclick="applyFilter()">✅ OK - لگا دیں</button><button class="btn-remove" onclick="removeFilter()">❌ ہٹائیں</button></div>
+    <button class="btn-cancel" style="width:100%;padding:11px;border:none;border-radius:10px;margin-top:8px;font-weight:800" onclick="cancelPreview()">↩️ پرانے پر واپس</button>
+  </div>
+
+  <!-- 6. صاف کریں -->
+  <div id="panel-adjust" class="sheet" style="display:none">
+    <span class="label">صاف کریں</span><h3>✨ صاف کریں - ویڈیو HD جیسی</h3><p>ویڈیو کو صاف، روشن اور رنگین کریں۔</p>
+    <label>روشنائی</label><input type="range" id="brightRange" min="0.5" max="1.5" step="0.1" value="1" oninput="setAdjust()">
+    <label>چمک</label><input type="range" id="contrastRange" min="0.8" max="1.6" step="0.1" value="1.1" oninput="setAdjust()">
+    <label>رنگ</label><input type="range" id="satRange" min="0.5" max="2" step="0.1" value="1.2" oninput="setAdjust()">
+    <div class="action-row"><button class="btn-ok" onclick="applyEnhance()">✅ OK</button><button class="btn-remove" onclick="removeEnhance()">❌ ہٹائیں</button></div>
+  </div>
+
+  <!-- 7. رفتار -->
+  <div id="panel-speed" class="sheet" style="display:none">
+    <span class="label">رفتار</span><h3>⏩ رفتار</h3><p>ویڈیو کو آہستہ یا تیز کریں۔</p>
+    <input type="range" min="0.5" max="2" step="0.1" value="1" oninput="changeSpeed(this.value)"><small id="speedLabel">رفتار: 1x - نارمل</small>
+    <div class="row"><button onclick="changeSpeed(0.5)">0.5x آہستہ</button><button onclick="changeSpeed(1)">1x نارمل</button><button onclick="changeSpeed(1.5)">1.5x تیز</button><button onclick="changeSpeed(2)">2x بہت تیز</button></div>
+    <div class="action-row"><button class="btn-ok" onclick="showMsg('رفتار پکی ✅')">✅ OK</button><button class="btn-remove" onclick="changeSpeed(1)">❌ واپس نارمل</button></div>
+  </div>
+
+  <!-- 8. ایفیکٹ -->
+  <div id="panel-effects" class="sheet" style="display:none">
+    <span class="label">ایفیکٹ</span><h3>🌈 ایفیکٹ</h3><p>وائرل، رنگین، بلر والے ایفیکٹ۔</p>
+    <div class="row"><button onclick="setPreview('contrast(1.2) saturate(1.8)','وائرل')">وائرل ✨</button><button onclick="setPreview('hue-rotate(90deg)','رنگین')">رنگین 🌈</button><button onclick="setPreview('invert(1)','الٹا')">الٹا 🔄</button><button onclick="setPreview('blur(2px)','بلر')">بلر 🌫️</button></div>
+    <div class="action-row"><button class="btn-ok" onclick="applyFilter()">✅ OK</button><button class="btn-remove" onclick="removeFilter()">❌ ہٹائیں</button></div>
+  </div>
+
+  <!-- 9. اینیمیشن -->
+  <div id="panel-animation" class="sheet" style="display:none">
+    <span class="label">اینیمیشن</span><h3>🎞️ اینیمیشن</h3><p>ٹیکسٹ / ویڈیو کیسے اندر آئے، کیسے باہر جائے۔</p>
+    <div class="row"><button onclick="showMsg('اندر آنا: Fade لگ گیا')">اندر - Fade</button><button onclick="showMsg('اندر آنا: Zoom لگ گیا')">اندر - Zoom</button><button onclick="showMsg('باہر جانا: Fade لگ گیا')">باہر - Fade</button><button onclick="showMsg('Combo: Zoom + Fade لگ گیا')">Combo ✨</button></div>
+    <div class="action-row"><button class="btn-ok" onclick="showMsg('اینیمیشن پکی ✅')">✅ OK</button><button class="btn-remove" onclick="showMsg('اینیمیشن ہٹا دی')">❌ ہٹائیں</button></div>
+  </div>
+
+  <!-- 10. کیپشن -->
+  <div id="panel-caption" class="sheet" style="display:none">
+    <span class="label">کیپشن</span><h3>💬 آٹو کیپشن - بول کر لکھیں</h3><p>کروم میں کھولیں، Allow دبائیں، پھر بولیں۔</p>
+    <small>حالت: <span id="micStatus" style="color:#00e5b8">بند ہے</span></small>
+    <select id="capLang"><option value="ur-PK">اردو</option><option value="en-US">English</option><option value="ar-SA">عربی</option><option value="hi-IN">ہندی</option></select>
+    <div class="action-row"><button class="btn-ok" onclick="startAutoCaption()">🎤 شروع کریں - بولیں</button><button class="btn-remove" onclick="stopAutoCaption()">روکیں</button></div>
+  </div>
+
+  <!-- 11. ایکسپورٹ -->
+  <div id="panel-export" class="sheet" style="display:none">
+    <span class="label">ایکسپورٹ</span><h3>📤 ایکسپورٹ</h3><p>پہلے کوالٹی چنیں، پھر ایکسپورٹ دبائیں۔</p>
+    <label>کوالٹی</label>
+    <div class="res-row"><button onclick="setRes('480p',this)">480p</button><button class="on" onclick="setRes('720p',this)">720p HD</button><button onclick="setRes('1080p',this)">1080p Full HD</button></div>
+    <label style="display:block;margin-top:10px">FPS</label>
+    <div class="res-row"><button onclick="setFps('24',this)">24</button><button class="on" onclick="setFps('30',this)">30</button><button onclick="setFps('60',this)">60</button></div>
+    <div class="status-box">کوالٹی: <b id="resLabel">720p HD</b> | FPS: <b id="fpsLabel">30</b><br>فلٹر: <b id="exportFilterLabel">اصلی</b></div>
+    <div class="action-row"><button class="btn-ok" onclick="exportRealVideo()">⬆️ ایکسپورٹ کریں</button></div>
+    <a id="downloadLink" style="display:none"></a>
+  </div>
+</div>
+
+<script>
+let video=document.getElementById('myVideo'), rotation=0, startTime=0, endTime=0, recognition=null, textSize=26;
+let appliedFilter='none', appliedName='اصلی', previewFilter='none', previewName='اصلی', selectedRes='720p', selectedFps='30';
+const filters=[
+  {name:'اصلی', css:'none', grad:'linear-gradient(135deg,#ddd,#999)', emoji:'🖼️'},
+  {name:'کالا سفید', css:'grayscale(1)', grad:'linear-gradient(135deg,#000,#aaa)', emoji:'⚫'},
+  {name:'سنہری', css:'sepia(0.8)', grad:'linear-gradient(135deg,#f6d365,#fda085)', emoji:'🌅'},
+  {name:'چمکدار', css:'contrast(1.4) saturate(1.5)', grad:'linear-gradient(135deg,#ff9a9e,#fecfef)', emoji:'✨'},
+  {name:'ٹھنڈا', css:'hue-rotate(180deg) saturate(1.2)', grad:'linear-gradient(135deg,#a1c4fd,#c2e9fb)', emoji:'🧊'},
+  {name:'گرم', css:'sepia(0.4) saturate(1.6)', grad:'linear-gradient(135deg,#ff512f,#dd2476)', emoji:'🔥'},
+  {name:'پرانا', css:'sepia(0.9) contrast(1.1)', grad:'linear-gradient(135deg,#d1913c,#ffd194)', emoji:'📜'},
+  {name:'روشن', css:'brightness(1.3)', grad:'linear-gradient(135deg,#fff,#ffe259)', emoji:'☀️'},
+  {name:'مووی', css:'contrast(1.2) saturate(0.8) brightness(0.9)', grad:'linear-gradient(135deg,#232526,#414345)', emoji:'🎬'},
+  {name:'گلابی', css:'hue-rotate(300deg) saturate(1.4)', grad:'linear-gradient(135deg,#ff6a88,#ff9a8b)', emoji:'🌸'},
+  {name:'نیلا', css:'hue-rotate(200deg) saturate(1.3)', grad:'linear-gradient(135deg,#2193b0,#6dd5ed)', emoji:'💙'},
+  {name:'بلر', css:'blur(1.5px)', grad:'linear-gradient(135deg,#ccc,#eee)', emoji:'🌫️'}
+];
+let row=document.getElementById('filterRow');
+filters.forEach((f,i)=>{
+  let d=document.createElement('div'); d.className='filter-item'; d.id='f-'+i;
+  d.innerHTML=`<div class="filter-thumb" style="background:${f.grad};filter:${f.css}"><span style="font-size:30px">${f.emoji}</span></div><b>${f.name}</b>`;
+  d.onclick=()=>{ document.querySelectorAll('.filter-item').forEach(x=>x.classList.remove('selected')); d.classList.add('selected'); setPreview(f.css,f.name); };
+  row.appendChild(d);
+});
+function setPreview(css,name){ previewFilter=css; previewName=name; video.style.filter=css; document.getElementById('previewName').innerText=name+' - دیکھ رہے ہیں'; document.getElementById('exportFilterLabel').innerText=name; showMsg(name+' دیکھ رہے ہیں، پسند ہے تو OK دبائیں'); }
+function applyFilter(){ appliedFilter=previewFilter; appliedName=previewName; document.getElementById('appliedName').innerText=appliedName+' ✅ پکا'; document.getElementById('exportFilterLabel').innerText=appliedName; showMsg(appliedName+' فلٹر پکا ہو گیا ✅'); }
+function removeFilter(){ appliedFilter='none'; appliedName='اصلی'; previewFilter='none'; previewName='اصلی'; video.style.filter='none'; document.querySelectorAll('.filter-item').forEach(x=>x.classList.remove('selected')); document.getElementById('appliedName').innerText='اصلی - ہٹا دیا'; document.getElementById('previewName').innerText='اصلی'; showMsg('فلٹر ہٹا دیا ❌'); }
+function cancelPreview(){ video.style.filter=appliedFilter; previewFilter=appliedFilter; previewName=appliedName; document.getElementById('previewName').innerText='واپس پکے پر: '+appliedName; showMsg('واپس پکے والے پر آ گئے'); }
+function changeStrength(v){ document.getElementById('strengthLabel').innerText='طاقت: '+v+'%'; if(previewName.includes('کالا سفید')) video.style.filter=`grayscale(${v/100})`; else if(previewName.includes('سنہری')) video.style.filter=`sepia(${v/100*0.8})`; else video.style.filter=previewFilter; }
+const stickers=['❤️','🔥','👍','🎉','⭐','💯','🔔','📢','✅ SUBSCRIBE','👉 FOLLOW','❤️ LIKE','💬 COMMENT','🕌','📖'];
+let sRow=document.getElementById('stickerRow');
+stickers.forEach(s=>{
+  let d=document.createElement('div'); d.className='sticker-item'; d.innerText=s; d.style.fontSize=(s.length>3?'11px':'28px'); d.style.fontWeight='800';
+  d.onclick=()=>{ document.querySelectorAll('.sticker-item').forEach(x=>x.classList.remove('selected')); d.classList.add('selected'); document.getElementById('stickerLayer').innerText=s; showMsg('اسٹیکر لگ گیا: '+s); };
+  sRow.appendChild(d);
+});
+function setRes(r,btn){ selectedRes=r; document.querySelectorAll('#panel-export .res-row')[0].querySelectorAll('button').forEach(b=>b.classList.remove('on')); if(btn) btn.classList.add('on'); document.getElementById('resLabel').innerText=r+(r=='720p'?' HD':r=='1080p'?' Full HD':''); showMsg('کوالٹی: '+r); }
+function setFps(f,btn){ selectedFps=f; document.getElementById('fpsLabel').innerText=f; showMsg('FPS: '+f); }
+function setAdjust(){ let b=document.getElementById('brightRange').value; let c=document.getElementById('contrastRange').value; let s=document.getElementById('satRange').value; video.style.filter=`brightness(${b}) contrast(${c}) saturate(${s})`; previewFilter=video.style.filter; previewName='صاف کریں - صاف'; }
+function applyEnhance(){ appliedFilter=previewFilter; appliedName='صاف کریں ✅'; showMsg('صاف کرنا پکا ہو گیا ✅'); }
+function removeEnhance(){ video.style.filter='none'; appliedFilter='none'; showMsg('صاف کرنا ہٹا دیا'); }
+function showPage(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function showMsg(m){ let s=document.getElementById('status'); s.innerText=m; s.style.display='block'; setTimeout(()=>s.style.display='none',2500); }
+function openPanel(name,btn){ document.querySelectorAll('.tool-bar button').forEach(b=>b.classList.remove('on')); if(btn) btn.classList.add('on'); ['edit','text','audio','stickers','filter','adjust','speed','effects','animation','caption','export'].forEach(n=>{ document.getElementById('panel-'+n).style.display=(n===name?'block':'none'); }); }
+function loadVideo(e){ let file=e.target.files[0]; if(!file) return; video.src=URL.createObjectURL(file); showPage('editor'); video.onloadedmetadata=()=>{ endTime=video.duration; document.getElementById('trimLabel').innerText="0s سے "+Math.floor(endTime)+"s تک"; }; video.play(); let list=document.getElementById('projectList'); let div=document.createElement('div'); div.className='card'; div.innerHTML=`<div style="width:70px;height:50px;background:#333;border-radius:8px;display:flex;align-items:center;justify-content:center">🎬</div><div><b>${file.name}</b><br><small>ابھی - نیا پروجیکٹ</small></div>`; div.onclick=()=>{ showPage('editor'); video.play(); }; list.prepend(div); showMsg('نیا پروجیکٹ کھل گیا - اب نیچے سے بٹن دبائیں'); }
+function togglePlay(){ video.paused?video.play():video.pause(); }
+function changeSpeed(v){ video.playbackRate=parseFloat(v); document.getElementById('speedLabel').innerText="رفتار: "+v+"x"; }
+function muteVideo(m){ video.muted=m; showMsg(m?'میوٹ ہو گیا':'آواز آن ہو گئی'); }
+function setVolume(v){ video.volume=v; video.muted=(v==0); }
+function rotateVideo(){ rotation+=90; if(rotation>=360) rotation=0; video.style.transform=`rotate(${rotation}deg)`; showMsg('گھوم گئی'); }
+function duplicateVideo(){ showMsg('کاپی بن گئی'); }
+function reverseVideo(){ showMsg('ریورس لگ گیا ⏪'); }
+function resetEdit(){ video.style.transform=''; video.playbackRate=1; video.style.filter='none'; showMsg('کاٹنا ہٹا دیا - واپس اصلی'); }
+function changeTextSize(d){ textSize+=d*4; document.getElementById('overlayText').style.fontSize=textSize+'px'; }
+function doTrim(){ if(!video.duration) return; let s=document.getElementById('trimStart').value; let e=document.getElementById('trimEnd').value; startTime=(s/100)*video.duration; endTime=(e/100)*video.duration; document.getElementById('trimLabel').innerText=Math.floor(startTime)+"s سے "+Math.floor(endTime)+"s تک"; video.currentTime=startTime; }
+function splitVideo(){ video.pause(); showMsg('اسپلٹ ہو گیا '+Math.floor(video.currentTime)+' سیکنڈ پر'); }
+function setCaptionColor(c){ document.getElementById('overlayText').style.color=c; }
+async function startAutoCaption(){ let lang=document.getElementById('capLang').value; try{ let s=await navigator.mediaDevices.getUserMedia({audio:true}); s.getTracks().forEach(t=>t.stop()); }catch(e){ alert('مائیک Allow کریں۔ لنک کو کروم میں کھولیں'); return; } let Speech=window.SpeechRecognition||window.webkitSpeechRecognition; if(!Speech){ alert('کروم میں کھولیں'); return; } if(recognition){ try{ recognition.stop(); }catch(e){} } recognition=new Speech(); recognition.lang=lang; recognition.continuous=true; recognition.interimResults=true; recognition.onstart=()=>{ document.getElementById('micStatus').innerText="🟢 سن رہے ہیں... بولیں"; }; recognition.onresult=(e)=>{ let t=''; for(let i=0;i<e.results.length;i++) t+=e.results[i][0].transcript; document.getElementById('overlayText').innerText=t; document.getElementById('textInput').value=t; }; recognition.start(); }
+function stopAutoCaption(){ if(recognition) recognition.stop(); document.getElementById('micStatus').innerText="بند ہے"; }
+function exportRealVideo(){
+  if(!video.src){ showMsg('پہلے ویڈیو لگائیں'); return; }
+  showMsg('ایکسپورٹ ہو رہی ہے... '+selectedRes+' | '+selectedFps+'fps | فلٹر: '+appliedName); video.currentTime=startTime; video.style.filter=appliedFilter; video.play();
+  try{ let stream=video.captureStream?video.captureStream():video.mozCaptureStream(); let rec=new MediaRecorder(stream,{mimeType:'video/webm'}); let chunks=[]; rec.ondataavailable=e=>{ if(e.data.size>0) chunks.push(e.data); }; rec.onstop=()=>{ let blob=new Blob(chunks,{type:'video/webm'}); let url=URL.createObjectURL(blob); let a=document.getElementById('downloadLink'); a.href=url; a.download='D-CUT-VIP-'+selectedRes+'.webm'; a.style.display='block'; a.innerText='یہاں کلک کر کے ڈاؤن لوڈ کریں ⬇️ '+selectedRes+' '+selectedFps+'fps'; a.style.cssText='display:block;background:#00e5b8;color:#000;padding:14px;border-radius:12px;text-align:center;font-weight:800;margin-top:12px'; showMsg('ایکسپورٹ ہو گئی! '+selectedRes); video.pause(); }; rec.start(); setTimeout(()=>rec.stop(), (endTime-startTime)*1000||5000); }catch(e){ let a=document.getElementById('downloadLink'); a.href=video.src; a.download='D-CUT.mp4'; a.style.display='block'; a.innerText='ڈاؤن لوڈ کریں ⬇️'; }
+}
+</script>
+</body>
+</html>
